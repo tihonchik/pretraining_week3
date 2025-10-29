@@ -57,8 +57,6 @@ class AuthorService : IAuthorService
     {
         try
         {
-            Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(author.Id);
-            if (existingAuthor is not null) throw new Exception();
             author = await _authorRepository.InsertAuthorAsync(author);
             return author;
         }

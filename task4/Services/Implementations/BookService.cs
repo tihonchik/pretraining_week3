@@ -62,8 +62,6 @@ class BookService : IBookService
     {
         try
         {
-            Book? existingBook = await _bookRepository.GetBookByIdAsync(book.Id);
-            if (existingBook is not null) throw new Exception();
             book = await _bookRepository.InsertBookAsync(book);
             return book;
         }
