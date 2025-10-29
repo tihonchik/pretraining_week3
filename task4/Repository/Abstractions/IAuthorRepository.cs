@@ -6,9 +6,9 @@ public interface IAuthorRepository
 
     public Author? GetAuthorById(int Id);
 
-    public void InsertAuthor(Author author);
+    public Author InsertAuthor(Author author);
 
-    public void UpdateAuthor(Author author);
+    public void UpdateAuthor(Author existingAuthor, Author updatedAuthor);
 
     public void DeleteAuthor(Author author);
 }

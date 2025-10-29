@@ -52,13 +52,14 @@ class BookService : IBookService
         }
     }
 
-    public void InsertBook(Book book)
+    public Book InsertBook(Book book)
     {
         try
         {
             Book? existingBook = _bookRepository.GetBookById(book.Id);
             if (existingBook is not null) throw new Exception();
-            _bookRepository.InsertBook(book);
+            book = _bookRepository.InsertBook(book);
+            return book;
         }
         catch
         {
@@ -72,7 +73,7 @@ class BookService : IBookService
         {
             Book? existingBook = _bookRepository.GetBookById(updatedBook.Id);
             if (existingBook is null) throw new Exception();
-            _bookRepository.UpdateBook(updatedBook);
+            _bookRepository.UpdateBook(existingBook, updatedBook);
         }
         catch
         {

@@ -4,9 +4,9 @@ public interface IBookService
 {
     public List<Book> GetAllBooks();
 
-    public Book? GetBookById(int Id);
+    public Book GetBookById(int Id);
 
-    public void InsertBook(Book book);
+    public Book InsertBook(Book book);
 
     public void UpdateBook(Book book);
 

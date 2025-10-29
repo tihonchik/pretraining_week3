@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace task4.Controllers;
@@ -7,17 +8,21 @@ namespace task4.Controllers;
 public class BookController : ControllerBase
 {
     private readonly IBookService _bookService;
-    public BookController(IBookService bookService)
+    private readonly IMapper _mapper;
+    public BookController(IBookService bookService, IMapper mapper)
     {
         _bookService = bookService;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public ActionResult<List<Book>> GetAllBooks()
+    public ActionResult<List<BookCreatedDto>> GetAllBooks()
     {
         try
         {
-            return Ok(_bookService.GetAllBooks());
+            List<Book> books = _bookService.GetAllBooks();
+            List<BookCreatedDto> booksCreatedDto = _mapper.Map<List<BookCreatedDto>>(books);
+            return Ok(booksCreatedDto);
         }
         catch
         {
@@ -26,11 +31,13 @@ public class BookController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Book> GetBookById(int id)
+    public ActionResult<BookCreatedDto> GetBookById(int id)
     {
         try
         {
-            return Ok(_bookService.GetBookById(id));
+            Book book = _bookService.GetBookById(id);
+            BookCreatedDto bookCreated = _mapper.Map<BookCreatedDto>(book);
+            return Ok(bookCreated);
         }
         catch
         {
@@ -40,7 +47,7 @@ public class BookController : ControllerBase
 
 
     [HttpPost]
-    public ActionResult InsertBook([FromBody] Book book)
+    public ActionResult<BookCreatedDto> InsertBook([FromBody] BookCreatingDto bookCreatingDto)
     {
 
         if (!ModelState.IsValid)
@@ -50,8 +57,10 @@ public class BookController : ControllerBase
 
         try
         {
-            _bookService.InsertBook(book);
-            return Created();
+            Book book = _mapper.Map<Book>(bookCreatingDto);
+            book = _bookService.InsertBook(book);
+            BookCreatedDto bookCreatedDto = _mapper.Map<BookCreatedDto>(book);
+            return Created(nameof(GetBookById), bookCreatedDto);
         }
         catch
         {
@@ -74,7 +83,7 @@ public class BookController : ControllerBase
     }
 
     [HttpPut]
-    public ActionResult UpdateBookById([FromBody] Book updatedBook)
+    public ActionResult UpdateBookById([FromBody] BookCreatedDto updatedCreatedBookDto)
     {
 
         if (!ModelState.IsValid)
@@ -84,7 +93,8 @@ public class BookController : ControllerBase
 
         try
         {
-            _bookService.UpdateBook(updatedBook);
+            Book book = _mapper.Map<Book>(updatedCreatedBookDto);
+            _bookService.UpdateBook(book);
             return Ok();
         }
         catch

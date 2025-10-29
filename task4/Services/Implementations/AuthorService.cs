@@ -52,13 +52,14 @@ class AuthorService : IAuthorService
         }
     }
 
-    public void InsertAuthor(Author author)
+    public Author InsertAuthor(Author author)
     {
         try
         {
             Author? existingAuthor = _authorRepository.GetAuthorById(author.Id);
             if (existingAuthor is not null) throw new Exception();
-            _authorRepository.InsertAuthor(author);
+            author = _authorRepository.InsertAuthor(author);
+            return author;
         }
         catch
         {
@@ -72,7 +73,7 @@ class AuthorService : IAuthorService
         {
             Author? existingAuthor = _authorRepository.GetAuthorById(updatedAuthor.Id);
             if (existingAuthor is null) throw new Exception();
-            _authorRepository.UpdateAuthor(updatedAuthor);
+            _authorRepository.UpdateAuthor(existingAuthor, updatedAuthor);
         }
         catch
         {

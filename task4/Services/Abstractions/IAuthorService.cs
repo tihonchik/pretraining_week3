@@ -4,9 +4,9 @@ public interface IAuthorService
 {
     public List<Author> GetAllAuthors();
 
-    public Author? GetAuthorById(int Id);
+    public Author GetAuthorById(int Id);
 
-    public void InsertAuthor(Author author);
+    public Author InsertAuthor(Author author);
 
     public void UpdateAuthor(Author author);
 

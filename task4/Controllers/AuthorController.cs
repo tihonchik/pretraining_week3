@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace task4.Controllers;
@@ -7,17 +8,21 @@ namespace task4.Controllers;
 public class AuthorController : ControllerBase
 {
     private readonly IAuthorService _authorService;
-    public AuthorController(IAuthorService authorService)
+    private readonly IMapper _mapper;
+    public AuthorController(IAuthorService authorService, IMapper mapper)
     {
         _authorService = authorService;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public ActionResult<List<Author>> GetAllAuthors()
+    public ActionResult<List<AuthorCreatedDto>> GetAllAuthors()
     {
         try
         {
-            return Ok(_authorService.GetAllAuthors());
+            List<Author> authors = _authorService.GetAllAuthors();
+            List<AuthorCreatedDto> authorsCreatedDto = _mapper.Map<List<AuthorCreatedDto>>(authors);
+            return Ok(authorsCreatedDto);
         }
         catch
         {
@@ -26,11 +31,13 @@ public class AuthorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Author> GetAuthorById(int id)
+    public ActionResult<AuthorCreatedDto> GetAuthorById(int id)
     {
         try
         {
-            return Ok(_authorService.GetAuthorById(id));
+            Author author = _authorService.GetAuthorById(id);
+            AuthorCreatedDto authorCreatedDto = _mapper.Map<AuthorCreatedDto>(author);
+            return Ok(authorCreatedDto);
         }
         catch
         {
@@ -40,7 +47,7 @@ public class AuthorController : ControllerBase
 
 
     [HttpPost]
-    public ActionResult InsertAuthor([FromBody] Author author)
+    public ActionResult<AuthorCreatedDto> InsertAuthor([FromBody] AuthorCreatingDto authorCreatingDto)
     {
 
         if (!ModelState.IsValid)
@@ -50,8 +57,10 @@ public class AuthorController : ControllerBase
 
         try
         {
-            _authorService.InsertAuthor(author);
-            return Created();
+            Author author = _mapper.Map<Author>(authorCreatingDto);
+            author = _authorService.InsertAuthor(author);
+            AuthorCreatedDto authorCreatedDto = _mapper.Map<AuthorCreatedDto>(author);
+            return Created(nameof(GetAuthorById), authorCreatedDto);
         }
         catch
         {
@@ -74,7 +83,7 @@ public class AuthorController : ControllerBase
     }
 
     [HttpPut]
-    public ActionResult UpdateAuthorById([FromBody] Author updatedAuthor)
+    public ActionResult UpdateAuthorById([FromBody] AuthorCreatedDto updatedAuthorCreatedDto)
     {
 
         if (!ModelState.IsValid)
@@ -84,6 +93,7 @@ public class AuthorController : ControllerBase
 
         try
         {
+            Author updatedAuthor = _mapper.Map<Author>(updatedAuthorCreatedDto);
             _authorService.UpdateAuthor(updatedAuthor);
             return Ok();
         }

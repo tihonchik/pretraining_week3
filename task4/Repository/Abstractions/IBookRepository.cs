@@ -6,9 +6,9 @@ public interface IBookRepository
 
     public Book? GetBookById(int Id);
 
-    public void InsertBook(Book book);
+    public Book InsertBook(Book book);
 
-    public void UpdateBook(Book book);
+    public void UpdateBook(Book existingBook, Book updatedBook);
 
     public void DeleteBook(Book book);
 }
