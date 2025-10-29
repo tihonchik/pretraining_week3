@@ -2,13 +2,14 @@ namespace task4;
 
 public interface IAuthorService
 {
-    public List<Author> GetAllAuthors();
+    public Task<List<Author>> GetAllAuthorsAsync(AuthorFilterDto filter);
 
-    public Author GetAuthorById(int Id);
+    public Task<Author> GetAuthorByIdAsync(int Id);
 
-    public Author InsertAuthor(Author author);
+    public Task<Author> InsertAuthorAsync(Author author);
 
-    public void UpdateAuthor(Author author);
+    public Task UpdateAuthorAsync(Author author);
 
-    public void DeleteAuthor(int Id);
+    public Task DeleteAuthorAsync(int Id);
+
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,11 @@ public class AuthorController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<AuthorCreatedDto>> GetAllAuthors()
+    public async Task<ActionResult<List<AuthorCreatedDto>>> GetAllAuthors([FromQuery] AuthorFilterDto filter)
     {
         try
         {
-            List<Author> authors = _authorService.GetAllAuthors();
+            List<Author> authors = await _authorService.GetAllAuthorsAsync(filter);
             List<AuthorCreatedDto> authorsCreatedDto = _mapper.Map<List<AuthorCreatedDto>>(authors);
             return Ok(authorsCreatedDto);
         }
@@ -31,11 +32,11 @@ public class AuthorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<AuthorCreatedDto> GetAuthorById(int id)
+    public async Task<ActionResult<AuthorCreatedDto>> GetAuthorByIdAsync(int id)
     {
         try
         {
-            Author author = _authorService.GetAuthorById(id);
+            Author author = await _authorService.GetAuthorByIdAsync(id);
             AuthorCreatedDto authorCreatedDto = _mapper.Map<AuthorCreatedDto>(author);
             return Ok(authorCreatedDto);
         }
@@ -47,7 +48,7 @@ public class AuthorController : ControllerBase
 
 
     [HttpPost]
-    public ActionResult<AuthorCreatedDto> InsertAuthor([FromBody] AuthorCreatingDto authorCreatingDto)
+    public async Task<ActionResult<AuthorCreatedDto>> InsertAuthor([FromBody] AuthorCreatingDto authorCreatingDto)
     {
 
         if (!ModelState.IsValid)
@@ -58,9 +59,9 @@ public class AuthorController : ControllerBase
         try
         {
             Author author = _mapper.Map<Author>(authorCreatingDto);
-            author = _authorService.InsertAuthor(author);
+            author = await _authorService.InsertAuthorAsync(author);
             AuthorCreatedDto authorCreatedDto = _mapper.Map<AuthorCreatedDto>(author);
-            return Created(nameof(GetAuthorById), authorCreatedDto);
+            return Created(nameof(GetAuthorByIdAsync), authorCreatedDto);
         }
         catch
         {
@@ -69,11 +70,11 @@ public class AuthorController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteAuthorById(int id)
+    public async Task<ActionResult> DeleteAuthorByIdAsync(int id)
     {
         try
         {
-            _authorService.DeleteAuthor(id);
+            await _authorService.DeleteAuthorAsync(id);
             return Ok();
         }
         catch
@@ -83,7 +84,7 @@ public class AuthorController : ControllerBase
     }
 
     [HttpPut]
-    public ActionResult UpdateAuthorById([FromBody] AuthorCreatedDto updatedAuthorCreatedDto)
+    public async Task<ActionResult> UpdateAuthorByIdAsync([FromBody] AuthorCreatedDto updatedAuthorCreatedDto)
     {
 
         if (!ModelState.IsValid)
@@ -94,7 +95,7 @@ public class AuthorController : ControllerBase
         try
         {
             Author updatedAuthor = _mapper.Map<Author>(updatedAuthorCreatedDto);
-            _authorService.UpdateAuthor(updatedAuthor);
+            await _authorService.UpdateAuthorAsync(updatedAuthor);
             return Ok();
         }
         catch

@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace task4;
@@ -12,32 +13,39 @@ public class AuthorRepository : IAuthorRepository
         _context = context;
     }
 
-    public void DeleteAuthor(Author author)
+    public async Task DeleteAuthorAsync(Author author)
     {
         _context.Authors.Remove(author);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public List<Author> GetAllAuthors()
+    public async Task<List<Author>> GetAllAuthorsAsync(AuthorFilterDto filter)
     {
-        return _context.Authors.ToList();
+        IQueryable<Author> query = _context.Authors;
+
+        if (filter.MinCountBook.HasValue)
+            query = query.Where(x => x.Books.Count == filter.MinCountBook);
+        if (!String.IsNullOrWhiteSpace(filter.NameStartWith))
+            query = query.Where(x => x.Name.StartsWith(filter.NameStartWith));
+
+        return await query.ToListAsync();
     }
 
-    public Author? GetAuthorById(int Id)
+    public async Task<Author?> GetAuthorByIdAsync(int Id)
     {
-        return _context.Authors.FirstOrDefault(x => x.Id == Id);
+        return await _context.Authors.FirstOrDefaultAsync(x => x.Id == Id);
     }
 
-    public Author InsertAuthor(Author author)
+    public async Task<Author> InsertAuthorAsync(Author author)
     {
         _context.Authors.Add(author);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return author;
     }
 
-    public void UpdateAuthor(Author existingAuthor, Author updatedAuthor)
+    public async Task UpdateAuthorAsync(Author existingAuthor, Author updatedAuthor)
     {
         _context.Authors.Entry(existingAuthor).CurrentValues.SetValues(updatedAuthor);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

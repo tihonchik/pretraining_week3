@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace task4;
@@ -10,14 +11,14 @@ class AuthorService : IAuthorService
     {
         _authorRepository = authorRepository;
     }
-    public void DeleteAuthor(int Id)
+    public async Task DeleteAuthorAsync(int Id)
     {
         try
         {
-            Author? existingAuthor = _authorRepository.GetAuthorById(Id);
+            Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(Id);
             if (existingAuthor is null) throw new Exception();
 
-            _authorRepository.DeleteAuthor(existingAuthor);
+            await _authorRepository.DeleteAuthorAsync(existingAuthor);
         }
         catch
         {
@@ -25,11 +26,11 @@ class AuthorService : IAuthorService
         }
     }
 
-    public List<Author> GetAllAuthors()
+    public async Task<List<Author>> GetAllAuthorsAsync(AuthorFilterDto filter)
     {
         try
         {
-            return _authorRepository.GetAllAuthors();
+            return await _authorRepository.GetAllAuthorsAsync(filter);
         }
         catch
         {
@@ -37,11 +38,11 @@ class AuthorService : IAuthorService
         }
     }
 
-    public Author GetAuthorById(int Id)
+    public async Task<Author> GetAuthorByIdAsync(int Id)
     {
         try
         {
-            Author? author = _authorRepository.GetAuthorById(Id);
+            Author? author = await _authorRepository.GetAuthorByIdAsync(Id);
             if (author is null) throw new Exception();
 
             return author;
@@ -52,13 +53,13 @@ class AuthorService : IAuthorService
         }
     }
 
-    public Author InsertAuthor(Author author)
+    public async Task<Author> InsertAuthorAsync(Author author)
     {
         try
         {
-            Author? existingAuthor = _authorRepository.GetAuthorById(author.Id);
+            Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(author.Id);
             if (existingAuthor is not null) throw new Exception();
-            author = _authorRepository.InsertAuthor(author);
+            author = await _authorRepository.InsertAuthorAsync(author);
             return author;
         }
         catch
@@ -67,13 +68,13 @@ class AuthorService : IAuthorService
         }
     }
 
-    public void UpdateAuthor(Author updatedAuthor)
+    public async Task UpdateAuthorAsync(Author updatedAuthor)
     {
         try
         {
-            Author? existingAuthor = _authorRepository.GetAuthorById(updatedAuthor.Id);
+            Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(updatedAuthor.Id);
             if (existingAuthor is null) throw new Exception();
-            _authorRepository.UpdateAuthor(existingAuthor, updatedAuthor);
+            await _authorRepository.UpdateAuthorAsync(existingAuthor, updatedAuthor);
         }
         catch
         {

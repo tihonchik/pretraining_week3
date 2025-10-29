@@ -2,13 +2,15 @@ namespace task4;
 
 public interface IBookService
 {
-    public List<Book> GetAllBooks();
+    public Task<List<Book>> GetAllBooksAsync(BookFilterDto filter);
 
-    public Book GetBookById(int Id);
+    public Task<Book> GetBookByIdAsync(int Id);
 
-    public Book InsertBook(Book book);
+    public Task<Book> InsertBookAsync(Book book);
 
-    public void UpdateBook(Book book);
+    public Task UpdateBookAsync(Book book);
 
-    public void DeleteBook(int Id);
+    public Task DeleteBookAsync(int Id);
+
+    public Task<List<Book>> GetBooksPublishedAfterSomeYearAsync(int year);
 }

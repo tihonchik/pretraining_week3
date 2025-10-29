@@ -1,4 +1,6 @@
 
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 
 namespace task4;
@@ -12,32 +14,42 @@ public class BookRepository : IBookRepository
         _context = context;
     }
 
-    public void DeleteBook(Book book)
+    public async Task DeleteBookAsync(Book book)
     {
         _context.Books.Remove(book);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public List<Book> GetAllBooks()
+    public async Task<List<Book>> GetAllBooksAsync(BookFilterDto filter)
     {
-        return _context.Books.ToList();
+        IQueryable<Book> query = _context.Books;
+
+        if (filter.PublishedAfterYear.HasValue)
+            query = query.Where(x => x.PublishedYear > filter.PublishedAfterYear);
+
+        return await query.ToListAsync();
     }
 
-    public Book? GetBookById(int Id)
+    public async Task<Book?> GetBookByIdAsync(int Id)
     {
-        return _context.Books.FirstOrDefault(x => x.Id == Id);
+        return await _context.Books.FirstOrDefaultAsync(x => x.Id == Id);
     }
 
-    public Book InsertBook(Book book)
+    public Task<List<Book>> GetBooksPublishedAfterSomeYearAsync(int year)
+    {
+        return _context.Books.Where(x => x.PublishedYear > year).ToListAsync();
+    }
+
+    public async Task<Book> InsertBookAsync(Book book)
     {
         _context.Books.Add(book);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return book;
     }
 
-    public void UpdateBook(Book existingBook, Book updatedBook)
+    public async Task UpdateBookAsync(Book existingBook, Book updatedBook)
     {
         _context.Books.Entry(existingBook).CurrentValues.SetValues(updatedBook);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,11 @@ public class BookController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<BookCreatedDto>> GetAllBooks()
+    public async Task<ActionResult<List<BookCreatedDto>>> GetAllBooksAsync([FromQuery] BookFilterDto filter)
     {
         try
         {
-            List<Book> books = _bookService.GetAllBooks();
+            List<Book> books = await _bookService.GetAllBooksAsync(filter);
             List<BookCreatedDto> booksCreatedDto = _mapper.Map<List<BookCreatedDto>>(books);
             return Ok(booksCreatedDto);
         }
@@ -31,11 +32,11 @@ public class BookController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<BookCreatedDto> GetBookById(int id)
+    public async Task<ActionResult<BookCreatedDto>> GetBookByIdAsync(int id)
     {
         try
         {
-            Book book = _bookService.GetBookById(id);
+            Book book = await _bookService.GetBookByIdAsync(id);
             BookCreatedDto bookCreated = _mapper.Map<BookCreatedDto>(book);
             return Ok(bookCreated);
         }
@@ -47,7 +48,7 @@ public class BookController : ControllerBase
 
 
     [HttpPost]
-    public ActionResult<BookCreatedDto> InsertBook([FromBody] BookCreatingDto bookCreatingDto)
+    public async Task<ActionResult<BookCreatedDto>> InsertBookAsync([FromBody] BookCreatingDto bookCreatingDto)
     {
 
         if (!ModelState.IsValid)
@@ -58,9 +59,9 @@ public class BookController : ControllerBase
         try
         {
             Book book = _mapper.Map<Book>(bookCreatingDto);
-            book = _bookService.InsertBook(book);
+            book = await _bookService.InsertBookAsync(book);
             BookCreatedDto bookCreatedDto = _mapper.Map<BookCreatedDto>(book);
-            return Created(nameof(GetBookById), bookCreatedDto);
+            return Created(nameof(GetBookByIdAsync), bookCreatedDto);
         }
         catch
         {
@@ -69,11 +70,11 @@ public class BookController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteBookById(int id)
+    public async Task<ActionResult> DeleteBookById(int id)
     {
         try
         {
-            _bookService.DeleteBook(id);
+            await _bookService.DeleteBookAsync(id);
             return Ok();
         }
         catch
@@ -83,7 +84,7 @@ public class BookController : ControllerBase
     }
 
     [HttpPut]
-    public ActionResult UpdateBookById([FromBody] BookCreatedDto updatedCreatedBookDto)
+    public async Task<ActionResult> UpdateBookByIdAsync([FromBody] BookCreatedDto updatedCreatedBookDto)
     {
 
         if (!ModelState.IsValid)
@@ -94,7 +95,7 @@ public class BookController : ControllerBase
         try
         {
             Book book = _mapper.Map<Book>(updatedCreatedBookDto);
-            _bookService.UpdateBook(book);
+            await _bookService.UpdateBookAsync(book);
             return Ok();
         }
         catch

@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace task4;
@@ -10,14 +11,14 @@ class BookService : IBookService
     {
         _bookRepository = bookRepository;
     }
-    public void DeleteBook(int Id)
+    public async Task DeleteBookAsync(int Id)
     {
         try
         {
-            Book? existingBook = _bookRepository.GetBookById(Id);
+            Book? existingBook = await _bookRepository.GetBookByIdAsync(Id);
             if (existingBook is null) throw new Exception();
 
-            _bookRepository.DeleteBook(existingBook);
+            await _bookRepository.DeleteBookAsync(existingBook);
         }
         catch
         {
@@ -25,11 +26,11 @@ class BookService : IBookService
         }
     }
 
-    public List<Book> GetAllBooks()
+    public async Task<List<Book>> GetAllBooksAsync(BookFilterDto filter)
     {
         try
         {
-            return _bookRepository.GetAllBooks();
+            return await _bookRepository.GetAllBooksAsync(filter);
         }
         catch
         {
@@ -37,11 +38,11 @@ class BookService : IBookService
         }
     }
 
-    public Book GetBookById(int Id)
+    public async Task<Book> GetBookByIdAsync(int Id)
     {
         try
         {
-            Book? book = _bookRepository.GetBookById(Id);
+            Book? book = await _bookRepository.GetBookByIdAsync(Id);
             if (book is null) throw new Exception();
 
             return book;
@@ -52,13 +53,18 @@ class BookService : IBookService
         }
     }
 
-    public Book InsertBook(Book book)
+    public Task<List<Book>> GetBooksPublishedAfterSomeYearAsync(int year)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Book> InsertBookAsync(Book book)
     {
         try
         {
-            Book? existingBook = _bookRepository.GetBookById(book.Id);
+            Book? existingBook = await _bookRepository.GetBookByIdAsync(book.Id);
             if (existingBook is not null) throw new Exception();
-            book = _bookRepository.InsertBook(book);
+            book = await _bookRepository.InsertBookAsync(book);
             return book;
         }
         catch
@@ -67,13 +73,13 @@ class BookService : IBookService
         }
     }
 
-    public void UpdateBook(Book updatedBook)
+    public async Task UpdateBookAsync(Book updatedBook)
     {
         try
         {
-            Book? existingBook = _bookRepository.GetBookById(updatedBook.Id);
+            Book? existingBook = await _bookRepository.GetBookByIdAsync(updatedBook.Id);
             if (existingBook is null) throw new Exception();
-            _bookRepository.UpdateBook(existingBook, updatedBook);
+            await _bookRepository.UpdateBookAsync(existingBook, updatedBook);
         }
         catch
         {
