@@ -3,3 +3,4 @@ obj/
 .vscode/
 appsettings.json
 appsettings.Development.json
+task4.db

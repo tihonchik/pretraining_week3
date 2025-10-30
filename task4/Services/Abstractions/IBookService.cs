@@ -12,5 +12,4 @@ public interface IBookService
 
     public Task DeleteBookAsync(int Id);
 
-    public Task<List<Book>> GetBooksPublishedAfterSomeYearAsync(int year);
 }

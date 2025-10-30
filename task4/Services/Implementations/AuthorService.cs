@@ -13,70 +13,35 @@ class AuthorService : IAuthorService
     }
     public async Task DeleteAuthorAsync(int Id)
     {
-        try
-        {
-            Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(Id);
-            if (existingAuthor is null) throw new Exception();
+        Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(Id);
+        if (existingAuthor is null) throw new KeyNotFoundException();
 
-            await _authorRepository.DeleteAuthorAsync(existingAuthor);
-        }
-        catch
-        {
-            throw;
-        }
+        await _authorRepository.DeleteAuthorAsync(existingAuthor);
     }
 
     public async Task<List<Author>> GetAllAuthorsAsync(AuthorFilterDto filter)
     {
-        try
-        {
-            return await _authorRepository.GetAllAuthorsAsync(filter);
-        }
-        catch
-        {
-            throw;
-        }
+        return await _authorRepository.GetAllAuthorsAsync(filter);
     }
 
     public async Task<Author> GetAuthorByIdAsync(int Id)
     {
-        try
-        {
-            Author? author = await _authorRepository.GetAuthorByIdAsync(Id);
-            if (author is null) throw new Exception();
+        Author? author = await _authorRepository.GetAuthorByIdAsync(Id);
+        if (author is null) throw new KeyNotFoundException();
 
-            return author;
-        }
-        catch
-        {
-            throw;
-        }
+        return author;
     }
 
     public async Task<Author> InsertAuthorAsync(Author author)
     {
-        try
-        {
-            author = await _authorRepository.InsertAuthorAsync(author);
-            return author;
-        }
-        catch
-        {
-            throw;
-        }
+        author = await _authorRepository.InsertAuthorAsync(author);
+        return author;
     }
 
     public async Task UpdateAuthorAsync(Author updatedAuthor)
     {
-        try
-        {
-            Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(updatedAuthor.Id);
-            if (existingAuthor is null) throw new Exception();
-            await _authorRepository.UpdateAuthorAsync(existingAuthor, updatedAuthor);
-        }
-        catch
-        {
-            throw;
-        }
+        Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(updatedAuthor.Id);
+        if (existingAuthor is null) throw new KeyNotFoundException();
+        await _authorRepository.UpdateAuthorAsync(existingAuthor, updatedAuthor);
     }
 }
