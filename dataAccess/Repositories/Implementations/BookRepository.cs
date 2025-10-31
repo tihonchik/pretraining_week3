@@ -1,7 +1,6 @@
 
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 
 namespace task4;
 

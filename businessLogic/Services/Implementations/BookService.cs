@@ -1,10 +1,9 @@
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace task4;
 
-class BookService(IBookRepository bookRepository) : IBookService
+public class BookService(IBookRepository bookRepository) : IBookService
 {
     private IBookRepository _bookRepository => bookRepository;
 

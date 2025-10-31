@@ -1,10 +1,9 @@
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace task4;
 
-class AuthorService(IAuthorRepository authorRepository) : IAuthorService
+public class AuthorService(IAuthorRepository authorRepository) : IAuthorService
 {
     private IAuthorRepository _authorRepository = authorRepository;
 
