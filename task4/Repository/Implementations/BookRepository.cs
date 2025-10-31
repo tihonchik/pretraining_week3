@@ -5,14 +5,9 @@ using SQLitePCL;
 
 namespace task4;
 
-public class BookRepository : IBookRepository
+public class BookRepository(LibraryContext context) : IBookRepository
 {
-    private readonly LibraryContext _context;
-
-    public BookRepository(LibraryContext context)
-    {
-        _context = context;
-    }
+    private LibraryContext _context => context;
 
     public async Task DeleteBookAsync(Book book)
     {

@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace task4;
 
-public class AuthorRepository : IAuthorRepository
+public class AuthorRepository(LibraryContext context) : IAuthorRepository
 {
-    private readonly LibraryContext _context;
-
-    public AuthorRepository(LibraryContext context)
-    {
-        _context = context;
-    }
+    private LibraryContext _context => context;
 
     public async Task DeleteAuthorAsync(Author author)
     {

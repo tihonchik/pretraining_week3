@@ -7,15 +7,10 @@ namespace task4.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthorController : ControllerBase
+public class AuthorController(IAuthorService authorService, IMapper mapper) : ControllerBase
 {
-    private readonly IAuthorService _authorService;
-    private readonly IMapper _mapper;
-    public AuthorController(IAuthorService authorService, IMapper mapper)
-    {
-        _authorService = authorService;
-        _mapper = mapper;
-    }
+    private IAuthorService _authorService => authorService;
+    private IMapper _mapper => mapper;
 
     [HttpGet]
     public async Task<ActionResult<List<AuthorCreatedDto>>> GetAllAuthors([FromQuery] AuthorFilterDto filter)

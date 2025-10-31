@@ -6,15 +6,10 @@ namespace task4.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BookController : ControllerBase
+public class BookController(IBookService bookService, IMapper mapper) : ControllerBase
 {
-    private readonly IBookService _bookService;
-    private readonly IMapper _mapper;
-    public BookController(IBookService bookService, IMapper mapper)
-    {
-        _bookService = bookService;
-        _mapper = mapper;
-    }
+    private IBookService _bookService => bookService;
+    private IMapper _mapper => mapper;
 
     [HttpGet]
     public async Task<ActionResult<List<BookCreatedDto>>> GetAllBooksAsync([FromQuery] BookFilterDto filter)

@@ -4,13 +4,10 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace task4;
 
-class AuthorService : IAuthorService
+class AuthorService(IAuthorRepository authorRepository) : IAuthorService
 {
-    private readonly IAuthorRepository _authorRepository;
-    public AuthorService(IAuthorRepository authorRepository)
-    {
-        _authorRepository = authorRepository;
-    }
+    private IAuthorRepository _authorRepository = authorRepository;
+
     public async Task DeleteAuthorAsync(int Id)
     {
         Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(Id);

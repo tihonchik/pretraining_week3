@@ -4,13 +4,10 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace task4;
 
-class BookService : IBookService
+class BookService(IBookRepository bookRepository) : IBookService
 {
-    private readonly IBookRepository _bookRepository;
-    public BookService(IBookRepository bookRepository)
-    {
-        _bookRepository = bookRepository;
-    }
+    private IBookRepository _bookRepository => bookRepository;
+
     public async Task DeleteBookAsync(int Id)
     {
         Book? book = await _bookRepository.GetBookByIdAsync(Id);
