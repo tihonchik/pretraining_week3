@@ -15,17 +15,16 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         {
             await _next(httpContext);
         }
-        catch (KeyNotFoundException ex)
-        {
-            await HandleExceptionAsync(httpContext, ex.Message, HttpStatusCode.NotFound, "Resource not found");
-        }
-        catch (DbUpdateException ex)
-        {
-            await HandleExceptionAsync(httpContext, ex.Message, HttpStatusCode.BadRequest, "The specified entity does not exist");
-        }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(httpContext, ex.Message, HttpStatusCode.InternalServerError, "Internal Server Error");
+            var (statusCode, message) = ex switch
+            {
+                KeyNotFoundException => (HttpStatusCode.NotFound, "Resource not found"),
+                DbUpdateException => (HttpStatusCode.BadRequest, "The specified entity does not exist"),
+                _ => (HttpStatusCode.InternalServerError, "Internal Server Error")
+            };
+
+            await HandleExceptionAsync(httpContext, ex.Message, statusCode, message);
         }
     }
 
