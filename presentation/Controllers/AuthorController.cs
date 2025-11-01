@@ -11,17 +11,17 @@ public class AuthorController(IAuthorService authorService, IMapper mapper) : Co
     [HttpGet]
     public async Task<ActionResult<List<AuthorCreatedDto>>> GetAllAuthors([FromQuery] AuthorFilterDto filterDto)
     {
-        AuthorEntityFilter filter = mapper.Map<AuthorEntityFilter>(filterDto);
-        List<AuthorEntity> authors = await authorService.GetAllAuthorsAsync(filter);
-        List<AuthorCreatedDto> authorsCreatedDto = mapper.Map<List<AuthorCreatedDto>>(authors);
+        AuthorModelFilter filterModel = mapper.Map<AuthorModelFilter>(filterDto);
+        List<AuthorModel> authorsModel = await authorService.GetAllAuthorsAsync(filterModel);
+        List<AuthorCreatedDto> authorsCreatedDto = mapper.Map<List<AuthorCreatedDto>>(authorsModel);
         return Ok(authorsCreatedDto);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<AuthorCreatedDto>> GetAuthorByIdAsync(int id)
     {
-        AuthorEntity author = await authorService.GetAuthorByIdAsync(id);
-        AuthorCreatedDto authorCreatedDto = mapper.Map<AuthorCreatedDto>(author);
+        AuthorModel authorModel = await authorService.GetAuthorByIdAsync(id);
+        AuthorCreatedDto authorCreatedDto = mapper.Map<AuthorCreatedDto>(authorModel);
         return Ok(authorCreatedDto);
     }
 
@@ -29,9 +29,9 @@ public class AuthorController(IAuthorService authorService, IMapper mapper) : Co
     [HttpPost]
     public async Task<ActionResult<AuthorCreatedDto>> InsertAuthor([FromBody] AuthorCreatingDto authorCreatingDto)
     {
-        AuthorEntity author = mapper.Map<AuthorEntity>(authorCreatingDto);
-        author = await authorService.InsertAuthorAsync(author);
-        AuthorCreatedDto authorCreatedDto = mapper.Map<AuthorCreatedDto>(author);
+        AuthorModel authorModel = mapper.Map<AuthorModel>(authorCreatingDto);
+        authorModel = await authorService.InsertAuthorAsync(authorModel);
+        AuthorCreatedDto authorCreatedDto = mapper.Map<AuthorCreatedDto>(authorModel);
         return Created(nameof(GetAuthorByIdAsync), authorCreatedDto);
     }
 
@@ -45,8 +45,8 @@ public class AuthorController(IAuthorService authorService, IMapper mapper) : Co
     [HttpPut]
     public async Task<ActionResult> UpdateAuthorByIdAsync([FromBody] AuthorCreatedDto updatedAuthorCreatedDto)
     {
-        AuthorEntity updatedAuthor = mapper.Map<AuthorEntity>(updatedAuthorCreatedDto);
-        await authorService.UpdateAuthorAsync(updatedAuthor);
+        AuthorModel updatedAuthorModel = mapper.Map<AuthorModel>(updatedAuthorCreatedDto);
+        await authorService.UpdateAuthorAsync(updatedAuthorModel);
         return Ok();
     }
 }

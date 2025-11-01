@@ -14,16 +14,16 @@ public class BookController(IBookService bookService, IMapper mapper) : Controll
     [HttpGet]
     public async Task<ActionResult<List<BookCreatedDto>>> GetAllBooksAsync([FromQuery] BookFilterDto filterDto)
     {
-        BookEntityFilter filter = _mapper.Map<BookEntityFilter>(filterDto);
-        List<BookEntity> books = await _bookService.GetAllBooksAsync(filter);
-        List<BookCreatedDto> booksCreatedDto = _mapper.Map<List<BookCreatedDto>>(books);
+        BookModelFilter filterModel = _mapper.Map<BookModelFilter>(filterDto);
+        List<BookModel> booksModel = await _bookService.GetAllBooksAsync(filterModel);
+        List<BookCreatedDto> booksCreatedDto = _mapper.Map<List<BookCreatedDto>>(booksModel);
         return Ok(booksCreatedDto);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<BookCreatedDto>> GetBookByIdAsync(int id)
     {
-        BookEntity book = await _bookService.GetBookByIdAsync(id);
+        BookModel book = await _bookService.GetBookByIdAsync(id);
         BookCreatedDto bookCreated = _mapper.Map<BookCreatedDto>(book);
         return Ok(bookCreated);
     }
@@ -32,9 +32,9 @@ public class BookController(IBookService bookService, IMapper mapper) : Controll
     [HttpPost]
     public async Task<ActionResult<BookCreatedDto>> InsertBookAsync([FromBody] BookCreatingDto bookCreatingDto)
     {
-        BookEntity book = _mapper.Map<BookEntity>(bookCreatingDto);
-        book = await _bookService.InsertBookAsync(book);
-        BookCreatedDto bookCreatedDto = _mapper.Map<BookCreatedDto>(book);
+        BookModel bookModel = _mapper.Map<BookModel>(bookCreatingDto);
+        bookModel = await _bookService.InsertBookAsync(bookModel);
+        BookCreatedDto bookCreatedDto = _mapper.Map<BookCreatedDto>(bookModel);
         return Created(nameof(GetBookByIdAsync), bookCreatedDto);
     }
 
@@ -48,8 +48,8 @@ public class BookController(IBookService bookService, IMapper mapper) : Controll
     [HttpPut]
     public async Task<ActionResult> UpdateBookByIdAsync([FromBody] BookCreatedDto updatedCreatedBookDto)
     {
-        BookEntity book = _mapper.Map<BookEntity>(updatedCreatedBookDto);
-        await _bookService.UpdateBookAsync(book);
+        BookModel bookModel = _mapper.Map<BookModel>(updatedCreatedBookDto);
+        await _bookService.UpdateBookAsync(bookModel);
         return Ok();
     }
 }

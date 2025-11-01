@@ -10,6 +10,8 @@ public static class BusinessLogicDependencyInjection
         services.AddScoped<IBookService, BookService>();
         services.AddScoped<IAuthorService, AuthorService>();
 
+        services.AddAutoMapper(typeof(MappingBusinessLogicProfile));
+
         return services;
     }
 }

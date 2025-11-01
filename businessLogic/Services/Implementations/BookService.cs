@@ -1,9 +1,10 @@
 
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace task4;
 
-public class BookService(IBookRepository bookRepository) : IBookService
+public class BookService(IBookRepository bookRepository, IMapper mapper) : IBookService
 {
     public async Task DeleteBookAsync(int Id)
     {
@@ -12,29 +13,35 @@ public class BookService(IBookRepository bookRepository) : IBookService
         await bookRepository.DeleteBookAsync(book);
     }
 
-    public async Task<List<BookEntity>> GetAllBooksAsync(BookEntityFilter filter)
+    public async Task<List<BookModel>> GetAllBooksAsync(BookModelFilter filterModel)
     {
-        return await bookRepository.GetAllBooksAsync(filter);
+        BookEntityFilter filterEntity = mapper.Map<BookEntityFilter>(filterModel);
+        List<BookEntity> booksEntity = await bookRepository.GetAllBooksAsync(filterEntity);
+        List<BookModel> booksModel = mapper.Map<List<BookModel>>(booksEntity);
+        return booksModel;
     }
 
-    public async Task<BookEntity> GetBookByIdAsync(int Id)
+    public async Task<BookModel> GetBookByIdAsync(int Id)
     {
-        BookEntity? book = await bookRepository.GetBookByIdAsync(Id);
-        if (book is null) throw new KeyNotFoundException();
-
-        return book;
+        BookEntity? bookEntity = await bookRepository.GetBookByIdAsync(Id);
+        if (bookEntity is null) throw new KeyNotFoundException();
+        BookModel bookModel = mapper.Map<BookModel>(bookEntity);
+        return bookModel;
     }
 
-    public async Task<BookEntity> InsertBookAsync(BookEntity book)
+    public async Task<BookModel> InsertBookAsync(BookModel bookModel)
     {
-        book = await bookRepository.InsertBookAsync(book);
-        return book;
+        BookEntity bookEntity = mapper.Map<BookEntity>(bookModel);
+        bookEntity = await bookRepository.InsertBookAsync(bookEntity);
+        bookModel = mapper.Map<BookModel>(bookEntity);
+        return bookModel;
     }
 
-    public async Task UpdateBookAsync(BookEntity updatedBook)
+    public async Task UpdateBookAsync(BookModel updatedBookModel)
     {
-        BookEntity? existingBook = await bookRepository.GetBookByIdAsync(updatedBook.Id);
-        if (existingBook is null) throw new Exception();
-        await bookRepository.UpdateBookAsync(existingBook, updatedBook);
+        BookEntity? existingBookEntity = await bookRepository.GetBookByIdAsync(updatedBookModel.Id);
+        if (existingBookEntity is null) throw new Exception();
+        BookEntity updatedBookEntity = mapper.Map<BookEntity>(updatedBookModel);
+        await bookRepository.UpdateBookAsync(existingBookEntity, updatedBookEntity);
     }
 }

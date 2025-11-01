@@ -1,9 +1,10 @@
 
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace task4;
 
-public class AuthorService(IAuthorRepository authorRepository) : IAuthorService
+public class AuthorService(IAuthorRepository authorRepository, IMapper mapper) : IAuthorService
 {
     public async Task DeleteAuthorAsync(int Id)
     {
@@ -13,29 +14,36 @@ public class AuthorService(IAuthorRepository authorRepository) : IAuthorService
         await authorRepository.DeleteAuthorAsync(existingAuthor);
     }
 
-    public async Task<List<AuthorEntity>> GetAllAuthorsAsync(AuthorEntityFilter filter)
+    public async Task<List<AuthorModel>> GetAllAuthorsAsync(AuthorModelFilter filterModel)
     {
-        return await authorRepository.GetAllAuthorsAsync(filter);
+        AuthorEntityFilter filterEntity = mapper.Map<AuthorEntityFilter>(filterModel);
+        List<AuthorEntity> authorsEntity = await authorRepository.GetAllAuthorsAsync(filterEntity);
+        List<AuthorModel> authorsModel = mapper.Map<List<AuthorModel>>(authorsEntity);
+        return authorsModel;
     }
 
-    public async Task<AuthorEntity> GetAuthorByIdAsync(int Id)
+    public async Task<AuthorModel> GetAuthorByIdAsync(int Id)
     {
-        AuthorEntity? author = await authorRepository.GetAuthorByIdAsync(Id);
-        if (author is null) throw new KeyNotFoundException();
+        AuthorEntity? authorEntity = await authorRepository.GetAuthorByIdAsync(Id);
+        if (authorEntity is null) throw new KeyNotFoundException();
+        AuthorModel authorModel = mapper.Map<AuthorModel>(authorEntity);
 
-        return author;
+        return authorModel;
     }
 
-    public async Task<AuthorEntity> InsertAuthorAsync(AuthorEntity author)
+    public async Task<AuthorModel> InsertAuthorAsync(AuthorModel authorModel)
     {
-        author = await authorRepository.InsertAuthorAsync(author);
-        return author;
+        AuthorEntity authorEntity = mapper.Map<AuthorEntity>(authorModel);
+        authorEntity = await authorRepository.InsertAuthorAsync(authorEntity);
+        authorModel = mapper.Map<AuthorModel>(authorEntity);
+        return authorModel;
     }
 
-    public async Task UpdateAuthorAsync(AuthorEntity updatedAuthor)
+    public async Task UpdateAuthorAsync(AuthorModel updatedAuthorModel)
     {
-        AuthorEntity? existingAuthor = await authorRepository.GetAuthorByIdAsync(updatedAuthor.Id);
-        if (existingAuthor is null) throw new KeyNotFoundException();
-        await authorRepository.UpdateAuthorAsync(existingAuthor, updatedAuthor);
+        AuthorEntity? existingAuthorEntity = await authorRepository.GetAuthorByIdAsync(updatedAuthorModel.Id);
+        if (existingAuthorEntity is null) throw new KeyNotFoundException();
+        AuthorEntity updatedAuthorEntity = mapper.Map<AuthorEntity>(updatedAuthorModel);
+        await authorRepository.UpdateAuthorAsync(existingAuthorEntity, updatedAuthorEntity);
     }
 }

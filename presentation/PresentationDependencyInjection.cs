@@ -7,7 +7,7 @@ public static class PresentationDependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(MappingProfile));
+        services.AddAutoMapper(typeof(MappingPresentationProfile));
 
         return services;
     }
