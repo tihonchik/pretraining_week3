@@ -6,17 +6,15 @@ namespace task4;
 
 public class AuthorRepository(LibraryContext context) : IAuthorRepository
 {
-    private LibraryContext _context => context;
-
-    public async Task DeleteAuthorAsync(Author author)
+    public async Task DeleteAuthorAsync(AuthorEntity author)
     {
-        _context.Authors.Remove(author);
-        await _context.SaveChangesAsync();
+        context.Authors.Remove(author);
+        await context.SaveChangesAsync();
     }
 
-    public async Task<List<Author>> GetAllAuthorsAsync(AuthorFilterDto filter)
+    public async Task<List<AuthorEntity>> GetAllAuthorsAsync(AuthorEntityFilter filter)
     {
-        IQueryable<Author> query = _context.Authors;
+        IQueryable<AuthorEntity> query = context.Authors;
 
         if (filter.MinCountBook.HasValue)
             query = query.Where(x => x.Books.Count == filter.MinCountBook);
@@ -26,21 +24,21 @@ public class AuthorRepository(LibraryContext context) : IAuthorRepository
         return await query.ToListAsync();
     }
 
-    public async Task<Author?> GetAuthorByIdAsync(int Id)
+    public async Task<AuthorEntity?> GetAuthorByIdAsync(int Id)
     {
-        return await _context.Authors.FirstOrDefaultAsync(x => x.Id == Id);
+        return await context.Authors.FirstOrDefaultAsync(x => x.Id == Id);
     }
 
-    public async Task<Author> InsertAuthorAsync(Author author)
+    public async Task<AuthorEntity> InsertAuthorAsync(AuthorEntity author)
     {
-        _context.Authors.Add(author);
-        await _context.SaveChangesAsync();
+        context.Authors.Add(author);
+        await context.SaveChangesAsync();
         return author;
     }
 
-    public async Task UpdateAuthorAsync(Author existingAuthor, Author updatedAuthor)
+    public async Task UpdateAuthorAsync(AuthorEntity existingAuthor, AuthorEntity updatedAuthor)
     {
-        _context.Authors.Entry(existingAuthor).CurrentValues.SetValues(updatedAuthor);
-        await _context.SaveChangesAsync();
+        context.Authors.Entry(existingAuthor).CurrentValues.SetValues(updatedAuthor);
+        await context.SaveChangesAsync();
     }
 }

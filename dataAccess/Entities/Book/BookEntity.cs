@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace task4;
 
-public class Book()
+public class BookEntity()
 {
     [Key]
     public int Id { get; set; }
@@ -13,6 +13,6 @@ public class Book()
 
     public int AuthorId { get; set; }
 
-    public Author Author { get; set; } = null!;
+    public AuthorEntity Author { get; set; } = null!;
 
 }

@@ -2,13 +2,13 @@ namespace task4;
 
 public interface IBookRepository
 {
-    public Task<List<Book>> GetAllBooksAsync(BookFilterDto filter);
+    public Task<List<BookEntity>> GetAllBooksAsync(BookEntityFilter filter);
 
-    public Task<Book?> GetBookByIdAsync(int Id);
+    public Task<BookEntity?> GetBookByIdAsync(int Id);
 
-    public Task<Book> InsertBookAsync(Book book);
+    public Task<BookEntity> InsertBookAsync(BookEntity book);
 
-    public Task UpdateBookAsync(Book existingBook, Book updatedBook);
+    public Task UpdateBookAsync(BookEntity existingBook, BookEntity updatedBook);
 
-    public Task DeleteBookAsync(Book book);
+    public Task DeleteBookAsync(BookEntity book);
 }

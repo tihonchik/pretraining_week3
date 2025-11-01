@@ -5,18 +5,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-builder.Services.AddDbContext<LibraryContext>(options => options.UseSqlite(connectionString));
-
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddDataAccess(connectionString);
+builder.Services.AddBusinessLogic();
+builder.Services.AddPresentation();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-
 
 var app = builder.Build();
 
@@ -30,7 +25,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.AddPresentation();
 
 app.UseHttpsRedirection();
 

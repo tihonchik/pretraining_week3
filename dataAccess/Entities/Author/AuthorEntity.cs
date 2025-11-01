@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace task4;
 
-public class Author()
+public class AuthorEntity()
 {
     [Key]
     public int Id { get; set; }
@@ -12,5 +11,5 @@ public class Author()
 
     public DateTime DateOfBirth { get; set; }
 
-    public ICollection<Book> Books { get; set; } = null!;
+    public ICollection<BookEntity> Books { get; set; } = null!;
 }

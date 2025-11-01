@@ -5,38 +5,36 @@ namespace task4;
 
 public class BookService(IBookRepository bookRepository) : IBookService
 {
-    private IBookRepository _bookRepository => bookRepository;
-
     public async Task DeleteBookAsync(int Id)
     {
-        Book? book = await _bookRepository.GetBookByIdAsync(Id);
+        BookEntity? book = await bookRepository.GetBookByIdAsync(Id);
         if (book is null) throw new KeyNotFoundException();
-        await _bookRepository.DeleteBookAsync(book);
+        await bookRepository.DeleteBookAsync(book);
     }
 
-    public async Task<List<Book>> GetAllBooksAsync(BookFilterDto filter)
+    public async Task<List<BookEntity>> GetAllBooksAsync(BookEntityFilter filter)
     {
-        return await _bookRepository.GetAllBooksAsync(filter);
+        return await bookRepository.GetAllBooksAsync(filter);
     }
 
-    public async Task<Book> GetBookByIdAsync(int Id)
+    public async Task<BookEntity> GetBookByIdAsync(int Id)
     {
-        Book? book = await _bookRepository.GetBookByIdAsync(Id);
+        BookEntity? book = await bookRepository.GetBookByIdAsync(Id);
         if (book is null) throw new KeyNotFoundException();
 
         return book;
     }
 
-    public async Task<Book> InsertBookAsync(Book book)
+    public async Task<BookEntity> InsertBookAsync(BookEntity book)
     {
-        book = await _bookRepository.InsertBookAsync(book);
+        book = await bookRepository.InsertBookAsync(book);
         return book;
     }
 
-    public async Task UpdateBookAsync(Book updatedBook)
+    public async Task UpdateBookAsync(BookEntity updatedBook)
     {
-        Book? existingBook = await _bookRepository.GetBookByIdAsync(updatedBook.Id);
+        BookEntity? existingBook = await bookRepository.GetBookByIdAsync(updatedBook.Id);
         if (existingBook is null) throw new Exception();
-        await _bookRepository.UpdateBookAsync(existingBook, updatedBook);
+        await bookRepository.UpdateBookAsync(existingBook, updatedBook);
     }
 }

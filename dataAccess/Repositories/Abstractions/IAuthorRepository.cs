@@ -2,13 +2,13 @@ namespace task4;
 
 public interface IAuthorRepository
 {
-    public Task<List<Author>> GetAllAuthorsAsync(AuthorFilterDto filter);
+    public Task<List<AuthorEntity>> GetAllAuthorsAsync(AuthorEntityFilter filter);
 
-    public Task<Author?> GetAuthorByIdAsync(int Id);
+    public Task<AuthorEntity?> GetAuthorByIdAsync(int Id);
 
-    public Task<Author> InsertAuthorAsync(Author author);
+    public Task<AuthorEntity> InsertAuthorAsync(AuthorEntity author);
 
-    public Task UpdateAuthorAsync(Author existingAuthor, Author updatedAuthor);
+    public Task UpdateAuthorAsync(AuthorEntity existingAuthor, AuthorEntity updatedAuthor);
 
-    public Task DeleteAuthorAsync(Author author);
+    public Task DeleteAuthorAsync(AuthorEntity author);
 }

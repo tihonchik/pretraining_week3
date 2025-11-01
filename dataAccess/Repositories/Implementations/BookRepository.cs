@@ -6,17 +6,15 @@ namespace task4;
 
 public class BookRepository(LibraryContext context) : IBookRepository
 {
-    private LibraryContext _context => context;
-
-    public async Task DeleteBookAsync(Book book)
+    public async Task DeleteBookAsync(BookEntity book)
     {
-        _context.Books.Remove(book);
-        await _context.SaveChangesAsync();
+        context.Books.Remove(book);
+        await context.SaveChangesAsync();
     }
 
-    public async Task<List<Book>> GetAllBooksAsync(BookFilterDto filter)
+    public async Task<List<BookEntity>> GetAllBooksAsync(BookEntityFilter filter)
     {
-        IQueryable<Book> query = _context.Books;
+        IQueryable<BookEntity> query = context.Books;
 
         if (filter.PublishedAfterYear.HasValue)
             query = query.Where(x => x.PublishedYear > filter.PublishedAfterYear);
@@ -24,26 +22,26 @@ public class BookRepository(LibraryContext context) : IBookRepository
         return await query.ToListAsync();
     }
 
-    public async Task<Book?> GetBookByIdAsync(int Id)
+    public async Task<BookEntity?> GetBookByIdAsync(int Id)
     {
-        return await _context.Books.FirstOrDefaultAsync(x => x.Id == Id);
+        return await context.Books.FirstOrDefaultAsync(x => x.Id == Id);
     }
 
-    public Task<List<Book>> GetBooksPublishedAfterSomeYearAsync(int year)
+    public Task<List<BookEntity>> GetBooksPublishedAfterSomeYearAsync(int year)
     {
-        return _context.Books.Where(x => x.PublishedYear > year).ToListAsync();
+        return context.Books.Where(x => x.PublishedYear > year).ToListAsync();
     }
 
-    public async Task<Book> InsertBookAsync(Book book)
+    public async Task<BookEntity> InsertBookAsync(BookEntity book)
     {
-        _context.Books.Add(book);
-        await _context.SaveChangesAsync();
+        context.Books.Add(book);
+        await context.SaveChangesAsync();
         return book;
     }
 
-    public async Task UpdateBookAsync(Book existingBook, Book updatedBook)
+    public async Task UpdateBookAsync(BookEntity existingBook, BookEntity updatedBook)
     {
-        _context.Books.Entry(existingBook).CurrentValues.SetValues(updatedBook);
-        await _context.SaveChangesAsync();
+        context.Books.Entry(existingBook).CurrentValues.SetValues(updatedBook);
+        await context.SaveChangesAsync();
     }
 }

@@ -5,39 +5,37 @@ namespace task4;
 
 public class AuthorService(IAuthorRepository authorRepository) : IAuthorService
 {
-    private IAuthorRepository _authorRepository = authorRepository;
-
     public async Task DeleteAuthorAsync(int Id)
     {
-        Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(Id);
+        AuthorEntity? existingAuthor = await authorRepository.GetAuthorByIdAsync(Id);
         if (existingAuthor is null) throw new KeyNotFoundException();
 
-        await _authorRepository.DeleteAuthorAsync(existingAuthor);
+        await authorRepository.DeleteAuthorAsync(existingAuthor);
     }
 
-    public async Task<List<Author>> GetAllAuthorsAsync(AuthorFilterDto filter)
+    public async Task<List<AuthorEntity>> GetAllAuthorsAsync(AuthorEntityFilter filter)
     {
-        return await _authorRepository.GetAllAuthorsAsync(filter);
+        return await authorRepository.GetAllAuthorsAsync(filter);
     }
 
-    public async Task<Author> GetAuthorByIdAsync(int Id)
+    public async Task<AuthorEntity> GetAuthorByIdAsync(int Id)
     {
-        Author? author = await _authorRepository.GetAuthorByIdAsync(Id);
+        AuthorEntity? author = await authorRepository.GetAuthorByIdAsync(Id);
         if (author is null) throw new KeyNotFoundException();
 
         return author;
     }
 
-    public async Task<Author> InsertAuthorAsync(Author author)
+    public async Task<AuthorEntity> InsertAuthorAsync(AuthorEntity author)
     {
-        author = await _authorRepository.InsertAuthorAsync(author);
+        author = await authorRepository.InsertAuthorAsync(author);
         return author;
     }
 
-    public async Task UpdateAuthorAsync(Author updatedAuthor)
+    public async Task UpdateAuthorAsync(AuthorEntity updatedAuthor)
     {
-        Author? existingAuthor = await _authorRepository.GetAuthorByIdAsync(updatedAuthor.Id);
+        AuthorEntity? existingAuthor = await authorRepository.GetAuthorByIdAsync(updatedAuthor.Id);
         if (existingAuthor is null) throw new KeyNotFoundException();
-        await _authorRepository.UpdateAuthorAsync(existingAuthor, updatedAuthor);
+        await authorRepository.UpdateAuthorAsync(existingAuthor, updatedAuthor);
     }
 }
